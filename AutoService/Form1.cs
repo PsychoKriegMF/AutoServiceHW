@@ -33,7 +33,40 @@ namespace AutoService
             {
                 cmbMechanic.Items.Add(name);
             }
-        }      
+        }
+
+        private void picBoxAvatar_Click(object sender, EventArgs e)
+        {
+            if (cmbMechanic.SelectedItem != null)
+            {
+                byte[] _image = FSWork.GetImage();
+                string _name = cmbMechanic.SelectedItem.ToString();
+                DBWork.AddAvatar(_name, _image);
+            }
+        }
+        private void SetImage2PictureBox()
+        {
+            string _name = cmbMechanic.SelectedItem.ToString();
+            MemoryStream ms = DBWork.GetAvatar(_name);
+            if (ms != null)
+            {
+                picBoxAvatar.Image =
+                Image.FromStream(DBWork.GetAvatar(_name));
+            }
+            else
+            {
+                picBoxAvatar.BackColor = Color.Black;
+                picBoxAvatar.Image = null;
+            }
+
+
+
+        }
+
+        private void cmbMechanic_SelectedValueChanged(object sender, EventArgs e)
+        {
+            SetImage2PictureBox();
+        }
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
@@ -56,6 +89,7 @@ namespace AutoService
             if (selectedMechanic != null && cmbMechanic.Items.Contains(selectedMechanic))
             {
                 cmbMechanic.SelectedItem = selectedMechanic; // Установить ранее выбранный элемент                
+                SetImage2PictureBox();
             }
         }
 
